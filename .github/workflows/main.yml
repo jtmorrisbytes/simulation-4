@@ -42,7 +42,7 @@ jobs:
         run: cargo build
       - name: Build Release
 #         working-directory: ${eng.workdir}}
-        uses: actions-rs/cargo@v2
+        uses: actions-rs/cargo@v1
         with:
           command: build
           args: --release
