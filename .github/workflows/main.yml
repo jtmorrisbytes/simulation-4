@@ -52,4 +52,4 @@ jobs:
           git add ./target/debug --force
           git add ./target/release --force
           git commit -am "Automated commit from github actions"
-          git push origin master -ff
+          git push origin releases -ff
