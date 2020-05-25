@@ -39,6 +39,7 @@ jobs:
         run: cargo build
       - name: Build Release
         run: cargo build --release
+        working-directory: ${eng.workdir}}
       - name: Push artifacts
         working-directory: ${{env.workdir}}
         run: |
