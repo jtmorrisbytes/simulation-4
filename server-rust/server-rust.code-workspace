@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "rust.actionOnSave": "clippy",
+    "rust.formatOnSave": true,
+    "rust-client.logToFile": true,
+    "rust-client.channel": "nightly",
+    "rust-client.updateOnStartup": true
+  }
+}
