@@ -47,6 +47,7 @@ jobs:
       - name: Push artifacts
         working-directory: ${{env.workdir}}
         run: |
+          pwd
           git config --global user.name 'Github Actions'
           git config --global user.email 'git@github.com'
           git add ./target/debug --force
