@@ -28,9 +28,17 @@ jobs:
         with:
           toolchain: nightly
           override: true
+      - name: Check
+        run: cargo check
+        working-directory: ${env.workdir}
       - name: Test
         run: cargo test
         working-directory: ${{env.workdir}}
+      - name: Build Debug
+        working-directory: ${{env.workdir}}
+        run: cargo build
+      - name: Build Release
+        run: cargo build --release
       - name: Push artifacts
         working-directory: ${{env.workdir}}
         run: |
