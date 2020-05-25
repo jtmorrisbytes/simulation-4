@@ -52,4 +52,5 @@ jobs:
           git add ./target/debug --force
           git add ./target/release --force
           git commit -am "Automated commit from github actions"
-          git push origin releases -ff
+          git fetch
+          git push -u origin releases -ff
