@@ -45,7 +45,7 @@ jobs:
         run: cargo build --release
         
       - name: Push artifacts
-        working-directory: ${{env.workdir}}
+#         working-directory: ${{env.workdir}}
         run: |
           pwd
           git config --global user.name 'Github Actions'
