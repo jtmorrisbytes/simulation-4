@@ -28,9 +28,9 @@ jobs:
         with:
           toolchain: nightly
           override: true
-      - name: Check
-        run: cargo check
-        working-directory: ${env.workdir}
+#       - name: Check
+#         run: cargo check
+#         working-directory: ${env.workdir}
       - name: Test
         run: cargo test
         working-directory: ${{env.workdir}}
