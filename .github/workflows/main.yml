@@ -49,7 +49,9 @@ jobs:
         run: |
           git config --global user.name 'Github Actions'
           git config --global user.email 'git@github.com'
-          git add ./target/debug --force
-          git add ./target/release --force
+          git add ./target/debug/simulation-4_server-rust --force
+          git add ./target/release/simulation-4_server-rust --force
           git commit -am "Automated commit from github actions"
-          git push origin releases -ff
+          git checkout master
+          git merge dev
+          git push -u origin master -ff
