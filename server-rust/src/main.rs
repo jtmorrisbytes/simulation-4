@@ -3,7 +3,7 @@
 extern crate rocket;
 #[macro_use]
 extern crate diesel;
-#[macro_use]
+// #[macro_use]
 extern crate serde;
 
 

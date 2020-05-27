@@ -1,17 +1,11 @@
 use crate::schema::users;
 use serde::{Serialize,Deserialize};
+use crate::lib;
 
-pub trait Updatable {
-  fn update(id:u32,username:String,profile_pic:String)->User;
-  // fn updatePassword(id:u32,new_password:String)->();
-}
-pub trait Createable {
-  fn create(username:String,password:String,profile:String);
-}
-pub trait Readable {
-  // fn getAll();
-  fn getOne();
-}
+
+
+
+
 
 
 pub struct User {
@@ -27,18 +21,14 @@ pub struct User {
   // profile image
   profile_pic:String
 }
-impl Createable for User {
-  fn create(username:String,password:String,profile:String){
+  fn create(new_username:String,new_password:String,profile:String){
     use crate::schema::users::dsl::*;
-    // insert_into(users);
+    use crate::diesel::ExpressionMethods;
+    // estabish connection
+    let conn = lib::establish_connection();
+    insert_into(users).values(username.eq(new_username.to_string()),password.eq(new_password.to_string()),profile_pic.eq(profile)).execute(&conn).unwrap();
     println!("User.create requested")
   }
-}
-impl Readable for User {
-  fn getOne(){
-    println!("get User requested")
-  }
-}
 
 
 
