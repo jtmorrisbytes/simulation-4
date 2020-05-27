@@ -1,5 +1,6 @@
 use crate::schema::users;
 use serde::{Serialize,Deserialize};
+use diesel::prelude::*;
 use crate::lib;
 
 
@@ -21,13 +22,16 @@ pub struct User {
   // profile image
   profile_pic:String
 }
-  fn create(new_username:String,new_password:String,profile:String){
+pub fn create(new_username:String,new_password:String,profile:String)->Result<usize,diesel::result::Error>{
     use crate::schema::users::dsl::*;
-    use crate::diesel::ExpressionMethods;
     // estabish connection
     let conn = lib::establish_connection();
-    insert_into(users).values(username.eq(new_username.to_string()),password.eq(new_password.to_string()),profile_pic.eq(profile)).execute(&conn).unwrap();
-    println!("User.create requested")
+    diesel::insert_into(users)
+    .values(
+      (username.eq(new_username.to_string()),
+      password.eq(new_password.to_string()),
+      profile_pic.eq(profile))
+    ).execute(&conn)
   }
 
 

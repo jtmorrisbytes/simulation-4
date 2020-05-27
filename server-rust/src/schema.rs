@@ -11,8 +11,8 @@ table! {
 table! {
     users (id) {
         id -> Int4,
-        username -> Nullable<Varchar>,
-        password -> Nullable<Varchar>,
+        username -> Varchar,
+        password -> Varchar,
         profile_pic -> Nullable<Text>,
     }
 }

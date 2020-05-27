@@ -1,4 +1,5 @@
-use crate::models::user::{NewUserRequest,UserResponse,User};
+use crate::models::user::{NewUserRequest,UserResponse};
+use crate::models::user;
 use rocket_contrib::json::Json;
 pub const BASE_PATH: &'static str = "/auth";
 #[get("/login")]
@@ -7,7 +8,15 @@ pub fn login() -> &'static str {
 }
 #[post("/register", format="json", data="<new_user>")]
 pub fn register(new_user: Json<NewUserRequest>) -> Json<UserResponse> {
-    User::create();
+    let result = user::create(
+        new_user.username.to_string(),
+        new_user.password.to_string(),
+        new_user.profile.to_string());
+    match result {
+        Ok(num_rows)=>{println!("{} rows inserted",num_rows)},
+        Err(err)=>{println!("need to return a user response, {:?}",err)}
+        _=>{println!("Something happened")}
+    }
     Json(
         UserResponse {
             userId:0,

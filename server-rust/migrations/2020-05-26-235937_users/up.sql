@@ -1,7 +1,7 @@
 -- Your SQL goes here
 create table users(
   id SERIAL PRIMARY KEY,
-  username varchar(20) NOT NULL,
+  username varchar(20) UNIQUE NOT NULL,
   password varchar(20) NOT NULL,
   profile_pic text
 );
