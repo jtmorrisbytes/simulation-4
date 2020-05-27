@@ -1,4 +1,4 @@
-use super::models::users;
+use crate::models::users;
 
 pub const BASE_PATH: &'static str = "/auth";
 #[get("/login")]
