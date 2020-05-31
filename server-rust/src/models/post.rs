@@ -1,8 +1,8 @@
 pub struct Post {
-    id: u32,
+    pub id: u32,
     //author id will reference User.id
-    author_id: String,
-    title: String,
-    img: String,
-    content: String,
+    pub author_id: String,
+    pub title: String,
+    pub img: String,
+    pub content: String,
 }
