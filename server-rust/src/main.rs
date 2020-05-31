@@ -3,14 +3,15 @@
 extern crate rocket;
 #[macro_use]
 extern crate diesel;
-// #[macro_use]
+extern crate rocket_contrib;
 extern crate serde;
 
-
-mod lib;
-mod schema;
 mod controllers;
+mod errors;
+mod lib;
 mod models;
+mod schema;
+
 use controllers::auth;
 // use self::controllers;
 
@@ -23,7 +24,7 @@ fn main() {
     rocket::ignite()
         .mount("/", routes![hello])
         .mount(
-            &(controllers::BasePath.to_string() + auth::BASE_PATH),
+            &(controllers::BASE_PATH.to_string() + auth::BASE_PATH),
             routes![
                 auth::login,
                 auth::register,
