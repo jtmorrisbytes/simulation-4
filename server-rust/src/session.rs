@@ -46,10 +46,33 @@ pub struct UserSession {
    where K is the type of the session key
    and V is the type of the struct 
 */
-#[derive(Debug)]
-pub struct SessionContainer<B>{
-  backend:B;
+// #[derive(Debug)]
+
+pub struct HashMapBackend<V>(HashMap<String,Session<String,V>>);
+
+pub trait Backend {
+  fn new();
+  fn with_key();
 }
+impl <V> Backend for HashMapBackend<V>{
+  fn new(){}
+  fn with_key(){}
+}
+
+
+// impl<B,V> SessionContainer<HashMap<String,Session<String,V>>>{
+//   fn new(data:V) -> SessionContainer<HashMap<String,Session<String,V>>>{
+//     let backend: HashMap<String,V> = HashMap::new();
+//     let key:String = "some unique key".to_string();
+//     let session : Session<String,V> = Session::with_key(key, data);
+//     backend.insert(key,data);
+//     SessionContainer {
+//       backend:backend
+//     }
+//   }
+// }
+
+
 
 #[derive(Debug)]
 pub struct Session<K,V> {
@@ -96,18 +119,6 @@ trait CreateSession {
   fn new();
 }
 
-impl<B,V> SessionContainer<HashMap<String,Session<String,V>>>{
-  fn new(data:V) -> SessionContainer<HashMap<String,Session<String,V>>>{
-    let backend: HashMap<String,V> = HashMap::new();
-    let key:String = "some unique key".to_string();
-    let session : Session<String,V> = Session::with_key(key, data);
-    backend.insert(key,data);
-    SessionContainer {
-      backend:backend
-    }
-  }
-}
-
 
 
 impl<V> Session<String,V> {
@@ -128,7 +139,7 @@ impl<V> Session<String,V> {
 #[test]
 pub fn test_session(){
 
-  let sess_container:SessionContainer<HashMap<String,UserSession>> = SessionContainer::new(UserSession{user_id:0});
+  let sess_container:SessionContainer<String,UserSession> = SessionContainer::new(UserSession{user_id:0});
 
   println!("Create session result: {:?}",sess_container)
 }
