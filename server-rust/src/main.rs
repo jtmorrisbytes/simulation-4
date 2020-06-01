@@ -11,6 +11,7 @@ mod errors;
 mod lib;
 mod models;
 mod schema;
+mod session;
 
 use controllers::auth;
 // use self::controllers;
