@@ -61,7 +61,7 @@ pub fn register(conn: Database, new_user: Json<NewUserRequest>) -> UserRegistrat
     // println!("result, {:?}",result);
 }
 #[post("/login", format = "json", data = "<user>")]
-pub fn login(conn: Database, user: Json<UserLoginRequest>) -> String {
+pub fn login(conn: Database, user: Json<UserLoginRequest>) -> responses::UserLoginResponse {
     println!("the user {:?}", user);
     return match user::get_by_username(&conn, &user.username) {
         Ok(user_list) => {
@@ -69,16 +69,30 @@ pub fn login(conn: Database, user: Json<UserLoginRequest>) -> String {
             match user_list.first() {
                 Some(db_user) => {
                     println!("comparing password!");
-                    if (user.password == db_user.password) {
-                        String::from("welcome!")
+                    if user.password == db_user.password {
+                        responses::UserLoginResponse::Ok(UserResponse {
+                            userId: db_user.id,
+                            username: db_user.username.to_string(),
+                            profile: db_user
+                                .profile_pic
+                                .as_ref()
+                                .unwrap_or(&String::from("null"))
+                                .to_string(),
+                        })
                     } else {
-                        String::from("invalid username or password")
+                        responses::UserLoginResponse::NotAuthorized(
+                            errors::InvalidUsernamePassword::new(),
+                        )
                     }
                 }
-                None => String::from("invalid username or password"),
+                None => responses::UserLoginResponse::NotAuthorized(
+                    errors::InvalidUsernamePassword::new(),
+                ),
             }
         }
-        Err(db_error) => format!("error {:?}", db_error),
+        Err(db_error) => {
+            responses::UserLoginResponse::DatabaseError(format!("error {:?}", db_error))
+        }
     };
 }
 #[get("/logout")]

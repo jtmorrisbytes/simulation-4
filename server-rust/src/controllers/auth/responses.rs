@@ -38,3 +38,11 @@ pub enum UserRegistrationResponse {
 //     }
 //   }
 // }
+#[derive(Responder, Serialize)]
+pub enum UserLoginResponse {
+    Ok(UserResponse),
+    #[response(status = 401)]
+    NotAuthorized(errors::InvalidUsernamePassword),
+    #[response(status = 500)]
+    DatabaseError(String),
+}
