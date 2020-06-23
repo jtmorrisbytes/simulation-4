@@ -1,4 +1,3 @@
-use crate::lib;
 use crate::schema::users;
 use rocket::request::Request;
 use rocket::response::{self, Responder};
@@ -28,7 +27,7 @@ pub struct NewUser {
     username: String,
     password: String,
 }
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct NewUserRequest {
     pub username: String,
     pub password: String,
@@ -52,12 +51,12 @@ pub struct UserLoginRequest {
     pub username: String,
     pub password: String,
 }
-#[allow(non_snake_case)]
-#[derive(Deserialize)]
-pub struct UserLoginResponse {
-    profile: String,
-    userId: u32,
-}
+// #[allow(non_snake_case)]
+// #[derive(Deserialize)]
+// pub struct UserLoginResponse {
+//     profile: String,
+//     userId: u32,
+// }
 pub fn create(
     conn: &PgConnection,
     new_username: String,

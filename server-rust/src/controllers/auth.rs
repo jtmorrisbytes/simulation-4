@@ -7,14 +7,8 @@ use crate::lib::Database;
 
 use rocket_contrib::json::Json;
 
-use rocket::response::status;
-
-// use rocket::http::Status;
-
-use diesel::result::DatabaseErrorKind::UniqueViolation;
+use diesel::result::DatabaseErrorKind::{UniqueViolation, __Unknown};
 use diesel::result::Error::DatabaseError;
-
-use bcrypt::{hash, verify};
 
 use self::responses::UserRegistrationResponse;
 
@@ -60,6 +54,19 @@ pub fn register(conn: Database, new_user: Json<NewUserRequest>) -> UserRegistrat
             //     table_name: table_name.to_string(),
             //     constraint_name: constraint_name.to_string(),
             // })
+        }
+        Err(DatabaseError(__Unknown, error)) => {
+            println!(
+                "Unhandled database Error!, for table '{0:?}', column {1:?}, constraint {2:?}, message {3:?}, details {4:?}",
+                error.table_name(),
+                error.column_name(),
+                error.constraint_name(),
+                error.message(),
+                error.details()
+            );
+            UserRegistrationResponse::UnhandledException(errors::UnhandledException {
+                message: error.message().to_string(),
+            })
         }
         Err(some_err) => {
             println!("An unhandled error occurred, {:?}", some_err);
@@ -118,3 +125,64 @@ pub fn logout() -> &'static str {
 // pub fn start_auth_session() -> &'static str {
 //     "ok.. starting auth session"
 // }
+#[allow(dead_code)]
+fn rocket() -> rocket::Rocket {
+    rocket::ignite()
+        .attach(Database::fairing())
+        .mount(BASE_PATH, routes![register, login])
+}
+#[cfg(test)]
+mod test {
+    use super::rocket;
+    use rocket::http::ContentType;
+    use rocket::http::Status;
+    use rocket::local::Client;
+    extern crate rand;
+    use crate::models::user::NewUserRequest;
+    use rand::distributions::Alphanumeric;
+    use rand::{thread_rng, Rng};
+    use rocket_contrib::json::Json;
+    // use serde::{Deserialize, Serialize};
+    // extern crate serde_json;
+    #[test]
+    pub fn test_register() {
+        let client = Client::new(rocket()).expect("invalid rocket instance");
+        // let username_sample =
+        let good_username = format!(
+            "test_user_{}",
+            thread_rng()
+                .sample_iter(&Alphanumeric)
+                .take(10)
+                .collect::<String>()
+        );
+        let good_password = thread_rng()
+            .sample_iter(&Alphanumeric)
+            .take(20)
+            .collect::<String>();
+        println!(
+            "good username: len {0} '{1}', good password: len {2},{3}",
+            good_username,
+            good_username.len(),
+            good_password,
+            good_password.len()
+        );
+        let profile = thread_rng().sample_iter(&Alphanumeric).take(500).collect();
+        let test_user = NewUserRequest {
+            username: good_username,
+            password: good_password,
+            profile,
+        };
+        let response = client
+            .post("/auth/register")
+            .header(ContentType::JSON)
+            .body(serde_json::to_string(&test_user).unwrap_or(String::from("")))
+            .dispatch();
+        assert_eq!(response.status(), Status::Created);
+        assert_eq!(
+            response.content_type().expect("Content type required!"),
+            ContentType::JSON
+        );
+        // let response = client.post("/auth/register").body(Json(test_user).respond_to(req: &Request))
+        println!("response from rocket {:?}", response)
+    }
+}

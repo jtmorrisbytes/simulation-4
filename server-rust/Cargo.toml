@@ -6,7 +6,9 @@ version = "0.1.0"
 [dependencies]
 bcrypt = "0.8.0"
 dotenv = "0.15.0"
+rand = "*"
 rocket = "0.4.4"
+serde_json = "*"
 
 [dependencies.diesel]
 features = ["postgres"]
