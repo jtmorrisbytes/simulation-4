@@ -8,11 +8,19 @@ use rocket::response::{self, Responder};
 
 use rocket::http::Status;
 
-// use rocket::http::ContentType;
+use serde::{Deserialize, Serialize};
 
+use crate::auth::errors;
+
+// use rocket::http::ContentType;
+#[derive(Serialize, Responder, Debug)]
 pub enum UserRegistrationResponse {
-    Sucess(UserResponse),
-    Error(UserRegistrationError),
+    #[response(status = 201)]
+    Created(UserResponse),
+    #[response(status = 500)]
+    UnhandledException(errors::UnhandledException),
+    #[response(status = 201)]
+    UniqueViolation(errors::UniqueViolation),
 }
 // impl<'r> Responder<'r> for UserRegistrationResponse {
 //   fn respond_to(self,request: &Request) ->response::Result<'r>{

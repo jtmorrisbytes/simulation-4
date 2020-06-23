@@ -1,0 +1,2 @@
+[global.databases.postgres]
+url= "postgres://pxiibapebogmrm:7af065f080b822ce6def389bf1535f87e6f691ed50f0977e0d52eef05f83ed66@ec2-35-171-31-33.compute-1.amazonaws.com:5432/d3h473q5i4bp87"

@@ -22,16 +22,11 @@ fn hello() -> &'static str {
 
 fn main() {
     rocket::ignite()
+        .attach(lib::Database::fairing())
         .mount("/", routes![hello])
         .mount(
             &(controllers::BASE_PATH.to_string() + auth::BASE_PATH),
-            routes![
-                auth::login,
-                auth::register,
-                auth::logout,
-                auth::get_auth_session,
-                auth::start_auth_session
-            ],
+            routes![auth::login, auth::register, auth::logout,],
         )
         .launch();
 }
