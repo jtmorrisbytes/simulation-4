@@ -14,16 +14,26 @@ use rocket::response::status;
 use diesel::result::DatabaseErrorKind::UniqueViolation;
 use diesel::result::Error::DatabaseError;
 
+use bcrypt::{hash, verify};
+
 use self::responses::UserRegistrationResponse;
 
 pub const BASE_PATH: &str = "/auth";
 
 #[post("/register", format = "json", data = "<new_user>")]
 pub fn register(conn: Database, new_user: Json<NewUserRequest>) -> UserRegistrationResponse {
+    let hash = match bcrypt::hash(&new_user.password, 14) {
+        Ok(hash) => hash,
+        Err(_) => {
+            println!("something went wrong while hashing");
+            String::from("")
+        }
+    };
+    println!("hash {0}, len {1}", hash, hash.len());
     match user::create(
         &*conn,
         new_user.username.to_string(),
-        new_user.password.to_string(),
+        hash,
         new_user.profile.to_string(),
     ) {
         Ok(user) => {
@@ -51,7 +61,8 @@ pub fn register(conn: Database, new_user: Json<NewUserRequest>) -> UserRegistrat
             //     constraint_name: constraint_name.to_string(),
             // })
         }
-        Err(_) => {
+        Err(some_err) => {
+            println!("An unhandled error occurred, {:?}", some_err);
             UserRegistrationResponse::UnhandledException(errors::UnhandledException {
                 message: "An unhandled error occurred with mod auth::register".to_string(),
             })
@@ -69,7 +80,7 @@ pub fn login(conn: Database, user: Json<UserLoginRequest>) -> responses::UserLog
             match user_list.first() {
                 Some(db_user) => {
                     println!("comparing password!");
-                    if user.password == db_user.password {
+                    if bcrypt::verify(&user.password, &db_user.password).unwrap_or(false) {
                         responses::UserLoginResponse::Ok(UserResponse {
                             userId: db_user.id,
                             username: db_user.username.to_string(),

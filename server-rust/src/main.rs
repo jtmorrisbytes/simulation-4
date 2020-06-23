@@ -3,6 +3,7 @@
 extern crate rocket;
 #[macro_use]
 extern crate diesel;
+extern crate bcrypt;
 extern crate rocket_contrib;
 extern crate serde;
 
