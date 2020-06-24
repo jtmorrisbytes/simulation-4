@@ -1,4 +1,4 @@
-function ensureUserIdInParams(req, res, next) {
+function expectUserIdInParams(req, res, next) {
   if (req.params.userId === undefined) {
     res.status(400).send("missing userId in request");
   } else if (String(parseInt(req.params.userId)) === "NaN") {
@@ -20,14 +20,19 @@ function ensureUserIdInParams(req, res, next) {
   }
 }
 
-function ensureRequestBodyIsJson(req, res, next) {
+function expectJsonBody(req, res, next) {
   if (!req.is("application/json")) {
     res.status(400).json("expecting content type application/json");
   } else {
     try {
       JSON.parse(req.body);
     } catch (parseError) {
-      res.status(422).json(`JSON parse error:  ${e.message || e}`);
+      res
+        .status(422)
+        .json(`JSON parse error:  ${parseError.message || parseError}`);
+      return;
     }
+    next();
   }
 }
+module.exports = { expectUserIdInParams, expectJsonBody };

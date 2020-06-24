@@ -1,0 +1,1 @@
+SELECT id,username, password,profile_pic as "profile" from users where username = $1
