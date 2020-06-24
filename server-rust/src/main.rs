@@ -14,14 +14,22 @@ mod models;
 mod schema;
 
 use controllers::auth;
+use controllers::post;
 // use self::controllers;
 
 #[get("/")]
 fn hello() -> &'static str {
     "Hello, world!"
 }
+#[cfg(test)]
+fn config() {
+    println!("getting test config!")
+}
 
-fn main() {
+#[cfg(not(test))]
+fn config() {}
+
+fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .attach(lib::Database::fairing())
         .mount("/", routes![hello])
@@ -29,5 +37,12 @@ fn main() {
             &(controllers::BASE_PATH.to_string() + auth::BASE_PATH),
             routes![auth::login, auth::register, auth::logout,],
         )
-        .launch();
+        .mount(
+            &(controllers::BASE_PATH.to_string() + post::BASE_PATH),
+            routes![post::create_post, post::find_post],
+        )
+}
+
+fn main() {
+    rocket().launch();
 }
