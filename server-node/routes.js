@@ -67,7 +67,7 @@ api.post(
 );
 // posts
 api.post(`${API_BASE_PATH}${POSTS_BASE_PATH}/:userId(\\d+)`, posts.create);
+api.get(`${API_BASE_PATH}${POSTS_BASE_PATH}/:postId(\\d+)`, posts.get);
 api.get(`${API_BASE_PATH}${POSTS_BASE_PATH}s/:userId(\\d+)`, posts.search);
-api.get(`${API_BASE_PATH}${POSTS_BASE_PATH}s/:postId(\\d+)`, posts.get);
 
 module.exports = api;

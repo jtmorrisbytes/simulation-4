@@ -60,7 +60,16 @@ function search(req, res, next) {
 }
 
 function get(req, res) {
-  res.status(200).send("hello from posts");
+  req.app
+    .get("db")
+    .post.getById(req.params.postId)
+    .then(
+      (r) => res.status(200).json(r[0] || null),
+      (e) => {
+        console.error("something went wrong", e);
+        res.status(500).json(e);
+      }
+    );
 }
 
 module.exports = { create, search, get };
