@@ -45,6 +45,7 @@ function login(req, res, next) {
               res.status(401).send("Incorrect username or password");
             } else {
               res.json({
+                id: user.id,
                 username: user.username,
                 profile: user.profile || "null",
               });

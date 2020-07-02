@@ -2,7 +2,7 @@ const express = require("express");
 let api = express();
 const API_BASE_PATH = "/api";
 
-const POSTS_BASE_PATH = "/posts";
+const POSTS_BASE_PATH = "/post";
 const AUTH_BASE_PATH = "/auth";
 
 const requestGuards = require("./middleware/requestGuards");
@@ -14,6 +14,7 @@ function notImplemented(req, res) {
 }
 
 api.use(express.json());
+api.use(express.text());
 api.post(
   `${API_BASE_PATH}${AUTH_BASE_PATH}/login`,
   // requestGuards.expectJsonBody,
@@ -66,10 +67,7 @@ api.post(
 );
 // posts
 api.post(`${API_BASE_PATH}${POSTS_BASE_PATH}/:userId(\\d+)`, posts.create);
-api.get(
-  `${API_BASE_PATH}${POSTS_BASE_PATH}/:userId(\\d+)`,
-  posts.search,
-  posts.get
-);
+api.get(`${API_BASE_PATH}${POSTS_BASE_PATH}s/:userId(\\d+)`, posts.search);
+api.get(`${API_BASE_PATH}${POSTS_BASE_PATH}s/:postId(\\d+)`, posts.get);
 
 module.exports = api;

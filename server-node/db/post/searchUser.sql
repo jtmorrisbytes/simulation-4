@@ -1,0 +1,1 @@
+Select * from posts where author_id = $1 and (content ilike $2 or title ilike $2)
